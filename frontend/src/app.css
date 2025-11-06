@@ -1,1 +1,12 @@
 @import 'tailwindcss';
+
+.bg {
+    background: url('/background.svg') no-repeat center center fixed;
+    background-size: cover;
+}
+
+.bungee-regular {
+    font-family: "Bungee", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
