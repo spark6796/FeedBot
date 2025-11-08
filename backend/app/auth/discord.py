@@ -70,7 +70,7 @@ async def login(request: CodeRequest):
                 value=jwt_token,
                 httponly=True,
                 secure=True,
-                samesite=None,
+                samesite="none",
             )
             return response
 
