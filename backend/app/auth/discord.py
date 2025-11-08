@@ -2,6 +2,7 @@ import httpx
 from fastapi import APIRouter, HTTPException, status
 from fastapi.responses import JSONResponse
 
+from app.core.state import users
 from app.core.config import *
 from app.core.jwt import create_access_token
 from app.schemas.auth import CodeRequest
@@ -51,6 +52,12 @@ async def login(request: CodeRequest):
             user_response.raise_for_status()
             discord_user = user_response.json()
 
+            users[str(discord_user["id"])] = {
+                "username":discord_user.get("username"),
+                "pfp": f"https://cdn.discordapp.com/avatars/{discord_user['id']}/{discord_user['avatar']}.png" if discord_user.get("avatar") else None,
+                "feeds": [
+                ]
+                }
             jwt_token = create_access_token(user_id=str(discord_user["id"]))
 
             response = JSONResponse(
@@ -62,7 +69,7 @@ async def login(request: CodeRequest):
                 key="access_token",
                 value=jwt_token,
                 httponly=True,
-                # secure=True,
+                secure=True,
                 samesite=None,
             )
             return response
