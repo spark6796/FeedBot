@@ -52,12 +52,14 @@ async def login(request: CodeRequest):
             user_response.raise_for_status()
             discord_user = user_response.json()
 
-            users[str(discord_user["id"])] = {
-                "username":discord_user.get("username"),
-                "pfp": f"https://cdn.discordapp.com/avatars/{discord_user['id']}/{discord_user['avatar']}.png" if discord_user.get("avatar") else None,
-                "feeds": [
-                ]
-                }
+            if users.get(str(discord_user["id"])) is None:
+                users[str(discord_user["id"])] = {
+                    "username":discord_user.get("username"),
+                    "pfp": f"https://cdn.discordapp.com/avatars/{discord_user['id']}/{discord_user['avatar']}.png" if discord_user.get("avatar") else None,
+                    "feeds": [
+                    ]
+                    }
+                
             jwt_token = create_access_token(user_id=str(discord_user["id"]))
 
             response = JSONResponse(
